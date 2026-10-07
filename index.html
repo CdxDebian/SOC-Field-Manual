@@ -1,87 +1,154 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>SOC Field Manual</title>
 <meta name="description" content="A fast, searchable reference for SOC analysts: Windows event IDs, KQL/SPL hunting queries, MITRE ATT&CK tactics, IR quick-steps, and India's cyber reporting clocks." />
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<script>try{var _t=localStorage.getItem("fm-theme");if(_t)document.documentElement.setAttribute("data-theme",_t);}catch(e){}</script>
 <style>
-  :root{--bg:#0B1426;--panel:#12203A;--panel2:#0F1B30;--line:#24344f;--cyan:#22D3EE;--red:#F43F5E;
-    --amber:#F59E0B;--green:#34D399;--violet:#A78BFA;--txt:#E5E7EB;--muted:#94A3B8;
-    --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;--sans:'Inter',system-ui,sans-serif;}
-  *{box-sizing:border-box}html,body{margin:0}
-  body{background:var(--bg);color:var(--txt);font-family:var(--sans);line-height:1.55;
-    background-image:radial-gradient(1100px 500px at 85% -10%,rgba(34,211,238,.07),transparent);}
-  a{color:var(--cyan);text-decoration:none}a:hover{text-decoration:underline}
-  .wrap{max-width:1000px;margin:0 auto;padding:0 16px}
-  header.top{padding:40px 0 6px}
-  .eyebrow{font:600 12px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--cyan)}
-  h1{font-size:clamp(26px,5vw,40px);margin:12px 0 6px;letter-spacing:-.02em}
-  .tag{color:var(--muted);max-width:68ch}
-  .searchbar{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,var(--bg) 70%,transparent);
-    padding:16px 0 10px;margin-top:10px}
+  :root{
+    --bg:#eef1f4; --surface:#ffffff; --raised:#f3f6f8; --sunken:#f8fafb;
+    --line:#d3dce3; --line-soft:#e4eaef;
+    --fg:#111c26; --fg-soft:#35485a; --muted:#64788a;
+    --accent:#0a6e8f; --accent-soft:#e3f0f4; --focus:#0a6e8f;
+    --c-win:#0a6e8f; --c-kql:#1a7f37; --c-spl:#9a6700; --c-attack:#c0362c; --c-ir:#6b4fbb; --c-reg:#b0298f;
+    --display:'Space Grotesk',system-ui,sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+    --shadow:0 1px 2px rgba(16,32,45,.04),0 8px 28px rgba(16,32,45,.06);
+    --maxw:960px;
+  }
+  :root[data-theme="dark"]{
+    --bg:#0c1116; --surface:#121a21; --raised:#17222b; --sunken:#0e151b;
+    --line:#26333d; --line-soft:#1d2831;
+    --fg:#e8eef3; --fg-soft:#c0ccd6; --muted:#8294a3;
+    --accent:#3fc1cf; --accent-soft:#102a31; --focus:#3fc1cf;
+    --c-win:#3fc1cf; --c-kql:#54c267; --c-spl:#e0a92b; --c-attack:#ff6b61; --c-ir:#a98bf0; --c-reg:#f069c8;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.35);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0c1116; --surface:#121a21; --raised:#17222b; --sunken:#0e151b;
+      --line:#26333d; --line-soft:#1d2831;
+      --fg:#e8eef3; --fg-soft:#c0ccd6; --muted:#8294a3;
+      --accent:#3fc1cf; --accent-soft:#102a31; --focus:#3fc1cf;
+      --c-win:#3fc1cf; --c-kql:#54c267; --c-spl:#e0a92b; --c-attack:#ff6b61; --c-ir:#a98bf0; --c-reg:#f069c8;
+      --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--display);font-size:16px;
+    line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline;text-underline-offset:3px}
+  :focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:4px}
+
+  .mast{display:flex;align-items:center;gap:14px;padding:22px 0}
+  .brand{display:flex;align-items:center;gap:11px;font-weight:600}
+  .glyph{width:28px;height:28px;color:var(--accent);flex:none}
+  .brand .n{font-size:15px}
+  .brand .n small{display:block;color:var(--muted);font-weight:500;font-size:12px}
+  .mast .sp{flex:1}
+  .mast a.ghl{color:var(--fg-soft);font-size:14px;font-weight:500}
+  .tbtn{appearance:none;background:var(--raised);border:1px solid var(--line);color:var(--fg-soft);
+    width:38px;height:34px;border-radius:9px;cursor:pointer;display:grid;place-items:center}
+  .tbtn:hover{border-color:var(--accent);color:var(--accent)}
+  .tbtn svg{width:17px;height:17px}
+
+  .hero{padding:40px 0 10px;max-width:70ch}
+  h1{font-size:clamp(30px,5vw,46px);line-height:1.05;letter-spacing:-.03em;font-weight:700;margin:0 0 14px}
+  .lede{color:var(--fg-soft);font-size:clamp(16px,1.8vw,18px);margin:0}
+  .lede kbd{font-family:var(--mono);font-size:12px;background:var(--raised);border:1px solid var(--line);
+    border-bottom-width:2px;border-radius:5px;padding:1px 6px;color:var(--fg)}
+
+  .searchwrap{position:sticky;top:0;z-index:30;background:var(--bg);padding:20px 0 12px;margin-top:18px}
+  .searchwrap::after{content:"";position:absolute;left:0;right:0;bottom:-16px;height:16px;
+    background:linear-gradient(var(--bg),transparent);pointer-events:none}
   .searchrow{display:flex;gap:10px;align-items:center}
-  #q{flex:1;background:#0a1324;border:1px solid var(--line);border-radius:12px;color:var(--txt);
-    padding:13px 15px;font-family:var(--mono);font-size:15px}
-  #q:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 1px var(--cyan),0 0 22px rgba(34,211,238,.12)}
-  .kbd{font:600 11px var(--mono);color:var(--muted);border:1px solid var(--line);border-radius:6px;
-    padding:4px 8px;background:var(--panel2)}
-  .cats{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
-  .cat{font:600 12px var(--sans);color:var(--muted);border:1px solid var(--line);background:var(--panel2);
-    padding:7px 12px;border-radius:999px;cursor:pointer;transition:.15s}
-  .cat[aria-pressed="true"]{color:#eafff;border-color:var(--cyan);
-    box-shadow:inset 0 0 0 1px var(--cyan)}
-  .count{color:var(--muted);font:500 12.5px var(--mono);margin-left:auto}
-  .list{margin:8px 0 60px}
-  .entry{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);
-    border-radius:14px;padding:16px 18px;margin-top:12px}
-  .entry h3{margin:0 0 3px;font-size:15.5px;display:flex;align-items:center;gap:10px}
-  .badge{font:700 10px var(--mono);padding:3px 8px;border-radius:6px;border:1px solid var(--line);letter-spacing:.04em}
-  .b-win{color:var(--cyan)} .b-kql{color:var(--green)} .b-spl{color:var(--amber)}
-  .b-attack{color:var(--red)} .b-ir{color:var(--violet)} .b-reg{color:#f0a} .b-id{color:var(--muted)}
-  .entry .desc{color:var(--muted);font-size:13.5px;margin:4px 0 0}
-  .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-  .t{font:500 11px var(--mono);color:var(--muted);background:#0a1324;border:1px solid var(--line);
-    padding:3px 7px;border-radius:6px}
-  pre{position:relative;background:#0a1324;border:1px solid var(--line);border-radius:10px;
-    padding:12px 14px;overflow:auto;margin:10px 0 0}
-  code{font-family:var(--mono);font-size:12.5px;color:#d7e3f4}
-  .copy{position:absolute;top:8px;right:8px;font:600 11px var(--mono);color:var(--muted);
-    background:var(--panel2);border:1px solid var(--line);border-radius:7px;padding:5px 9px;cursor:pointer}
-  .copy:hover{color:var(--cyan);border-color:var(--cyan)}
-  mark{background:rgba(34,211,238,.25);color:#eafdff;border-radius:3px;padding:0 1px}
-  .empty{color:var(--muted);text-align:center;padding:40px;font-size:14px}
-  footer{margin:30px 0 40px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:16px}
-  .flinks{display:flex;gap:16px;flex-wrap:wrap;margin-top:8px}
+  #q{flex:1;background:var(--surface);border:1px solid var(--line);border-radius:12px;color:var(--fg);
+    padding:14px 16px;font-family:var(--mono);font-size:15px;box-shadow:var(--shadow)}
+  #q:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .skey{font-family:var(--mono);font-size:11.5px;color:var(--muted);border:1px solid var(--line);
+    border-radius:6px;padding:5px 9px;white-space:nowrap}
+  .cats{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+  .cat{font-family:var(--display);font-size:13px;font-weight:600;color:var(--muted);border:1px solid var(--line);
+    background:var(--surface);padding:7px 13px;border-radius:999px;cursor:pointer}
+  .cat:hover{color:var(--fg)}
+  .cat[aria-pressed="true"]{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+  .count{margin-left:auto;align-self:center;color:var(--muted);font-family:var(--mono);font-size:12.5px}
+
+  .list{margin:6px 0 60px}
+  .entry{position:relative;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--line);
+    border-radius:12px;padding:16px 18px 16px 20px;margin-top:12px;box-shadow:var(--shadow)}
+  .entry.e-win{border-left-color:var(--c-win)} .entry.e-kql{border-left-color:var(--c-kql)}
+  .entry.e-spl{border-left-color:var(--c-spl)} .entry.e-attack{border-left-color:var(--c-attack)}
+  .entry.e-ir{border-left-color:var(--c-ir)} .entry.e-reg{border-left-color:var(--c-reg)}
+  .entry h3{margin:0 0 4px;font-size:15.5px;font-weight:600;letter-spacing:-.01em;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .badge{font-family:var(--mono);font-size:10px;font-weight:600;padding:3px 8px;border-radius:6px;border:1px solid var(--line)}
+  .b-win{color:var(--c-win)} .b-kql{color:var(--c-kql)} .b-spl{color:var(--c-spl)}
+  .b-attack{color:var(--c-attack)} .b-ir{color:var(--c-ir)} .b-reg{color:var(--c-reg)}
+  .b-id{color:var(--muted);font-weight:500}
+  .entry .desc{color:var(--fg-soft);font-size:14px;margin:4px 0 0}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .t{font-family:var(--mono);font-size:11px;color:var(--muted);background:var(--sunken);
+    border:1px solid var(--line-soft);padding:3px 7px;border-radius:6px}
+  pre{position:relative;background:var(--sunken);border:1px solid var(--line);border-radius:10px;
+    padding:13px 15px;overflow:auto;margin:11px 0 0}
+  code{font-family:var(--mono);font-size:12.5px;color:var(--fg)}
+  .copy{position:absolute;top:9px;right:9px;font-family:var(--mono);font-size:11px;color:var(--muted);
+    background:var(--surface);border:1px solid var(--line);border-radius:7px;padding:5px 9px;cursor:pointer}
+  .copy:hover{color:var(--accent);border-color:var(--accent)}
+  mark{background:color-mix(in srgb,var(--accent) 24%,transparent);color:inherit;border-radius:3px;padding:0 1px}
+  .empty{color:var(--muted);text-align:center;padding:48px 20px;font-size:14.5px;border:1px dashed var(--line);
+    border-radius:12px;margin-top:16px}
+
+  footer{border-top:1px solid var(--line-soft);padding:26px 0 46px;color:var(--muted);font-size:13.5px}
+  footer .fl{display:flex;flex-wrap:wrap;gap:18px;margin-top:10px}
+  @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header class="top">
-    <div class="eyebrow">SOC reference · analyst edition</div>
-    <h1>SOC Field Manual</h1>
-    <p class="tag">The things a SOC analyst reaches for mid-incident — Windows event IDs, KQL &amp; SPL hunting queries,
-      MITRE ATT&amp;CK tactics, IR quick-steps, and India's cyber reporting clocks — in one page that searches instantly.
-      Hit <span class="kbd">/</span> to search.</p>
+  <header class="mast">
+    <div class="brand">
+      <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+        <path d="M4 5h16M4 5v14M4 19h16M20 5v14"/><path d="M8 9h9M8 13h9M8 17h5"/>
+      </svg>
+      <span class="n">SOC Field Manual<small>searchable analyst reference</small></span>
+    </div>
+    <div class="sp"></div>
+    <a class="ghl" href="https://github.com/CdxDebian/soc-field-manual">Source</a>
+    <button class="tbtn" id="themeBtn" aria-label="Switch colour theme" title="Switch theme">
+      <svg id="thIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"></svg>
+    </button>
   </header>
 
-  <div class="searchbar">
+  <section class="hero">
+    <h1>What you reach for mid-incident.</h1>
+    <p class="lede">Windows event IDs, KQL and SPL hunting queries, MITRE ATT&amp;CK and ATLAS techniques, incident-response
+      steps, and India's CERT-In and SEBI reporting clocks — one reference that searches as you type. Press
+      <kbd>/</kbd> to search, <kbd>Esc</kbd> to clear.</p>
+  </section>
+
+  <div class="searchwrap">
     <div class="searchrow">
-      <input id="q" placeholder="Search: kerberoast, 4769, impossible travel, CERT-In, LSASS, beacon…" autocomplete="off" spellcheck="false" />
-      <span class="kbd">/ to focus</span>
+      <input id="q" placeholder="kerberoast · 4769 · impossible travel · CERT-In · LSASS · beacon" autocomplete="off" spellcheck="false" />
+      <span class="skey">/ to focus</span>
     </div>
     <div class="cats" id="cats"></div>
-    <div style="display:flex"><span class="count" id="count"></span></div>
   </div>
+  <div style="display:flex"><span class="count" id="count"></span></div>
 
   <div class="list" id="list"></div>
 
   <footer>
-    <div>Curated by <b>Rahul Shrivastava</b> — Security Operations Engineer. Queries are starting points: adjust table
-      names, fields and thresholds to your environment before production use.</div>
-    <div class="flinks">
+    <div>Curated by Rahul Shrivastava, security operations engineer. Queries are starting points — adjust table
+      names, fields and thresholds to your environment, and validate before production use.</div>
+    <div class="fl">
       <a href="https://www.rahulshrivastava.co.in">rahulshrivastava.co.in</a>
       <a href="https://www.linkedin.com/in/shriv-rahul">LinkedIn</a>
       <a href="https://github.com/CdxDebian">GitHub</a>
@@ -91,6 +158,7 @@
 </div>
 
 <script>
+
 const DATA=[
 /* ---- Windows event IDs ---- */
 {c:"win",id:"4624",title:"Logon success",desc:"Track logon types: 2=interactive, 3=network, 10=RemoteInteractive (RDP). Service accounts logging on interactively (type 2/10) is suspicious.",tags:["logon","rdp","lateral movement","T1078"]},
@@ -174,7 +242,7 @@ function render(){
     const [bcls,blabel]=BADGE[d.c];
     const code=d.code?`<pre><button class="copy">copy</button><code>${hl(d.code,query)}</code></pre>`:"";
     const tags=d.tags.map(t=>`<span class="t">${hl(t,query)}</span>`).join("");
-    return `<div class="entry"><h3><span class="badge ${bcls}">${blabel}</span>
+    return `<div class="entry e-${d.c}"><h3><span class="badge ${bcls}">${blabel}</span>
       <span class="badge b-id">${hl(d.id,query)}</span> ${hl(d.title,query)}</h3>
       <p class="desc">${hl(d.desc,query)}</p>${code}<div class="tags">${tags}</div></div>`;
   }).join("");
@@ -190,6 +258,24 @@ document.addEventListener("keydown",e=>{
   if(e.key==="Escape"){$("#q").value="";query="";render();$("#q").blur();}
 });
 render();
+
+
+/* ---- theme toggle ---- */
+(function(){
+  var SUN='<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/>';
+  var MOON='<path d="M20 14.5A8 8 0 1 1 9.5 4a6.3 6.3 0 0 0 10.5 10.5z"/>';
+  var root=document.documentElement, icon=document.getElementById("thIcon"), btn=document.getElementById("themeBtn");
+  function current(){var t=root.getAttribute("data-theme"); if(t) return t;
+    return window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";}
+  function paint(){icon.innerHTML = current()==="dark" ? SUN : MOON;}
+  paint();
+  btn.addEventListener("click",function(){
+    var next = current()==="dark" ? "light":"dark";
+    root.setAttribute("data-theme",next);
+    try{localStorage.setItem("fm-theme",next);}catch(e){}
+    paint();
+  });
+})();
 </script>
 </body>
 </html>
