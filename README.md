@@ -10,7 +10,7 @@
 ![No backend](https://img.shields.io/badge/backend-none-0B1426?style=flat-square)
 ![Vanilla JS](https://img.shields.io/badge/dependencies-0-F59E0B?style=flat-square)
 
-**👉 [cdxdebian.github.io/soc-field-manual](https://cdxdebian.github.io/soc-field-manual/)**
+**👉 [cdxdebian.github.io/SOC-Field-Manual](https://cdxdebian.github.io/SOC-Field-Manual/)**
 
 </div>
 
