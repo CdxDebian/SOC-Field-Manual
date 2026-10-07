@@ -4,7 +4,7 @@
 
 ### The things a SOC analyst reaches for mid-incident — in one page that searches instantly.
 
-[![Live](https://img.shields.io/badge/▶_OPEN-searchable_reference-22D3EE?style=for-the-badge)](https://cdxdebian.github.io/soc-field-manual/)
+[![Live](https://img.shields.io/badge/▶_OPEN-searchable_reference-22D3EE?style=for-the-badge)](https://cdxdebian.github.io/SOC-Field-Manual/)
 <br/>
 ![Entries](https://img.shields.io/badge/entries-42+-34D399?style=flat-square)
 ![No backend](https://img.shields.io/badge/backend-none-0B1426?style=flat-square)
