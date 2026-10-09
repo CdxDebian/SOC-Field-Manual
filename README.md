@@ -46,13 +46,10 @@ flowchart LR
 ### Run it
 
 ```bash
-git clone https://github.com/CdxDebian/soc-field-manual
-cd soc-field-manual && python -m http.server 8000   # http://localhost:8000
+git clone https://github.com/CdxDebian/SOC-Field-Manual
+cd SOC-Field-Manual && python -m http.server 8000   # http://localhost:8000
 ```
 Single `index.html`, no build step. Works offline — open the file directly.
-
-### Enable the live page (GitHub Pages)
-Settings → Pages → Source: **Deploy from a branch** → `main` / `root`.
 
 > ⚠️ Queries are **starting points** — adjust table names, field names and thresholds to your environment, and validate with a simulation before production. Not a substitute for your own detection engineering.
 
